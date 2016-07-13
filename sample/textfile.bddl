@@ -1,0 +1,20 @@
+enum BOM {
+  byte[] UTF8 = "EF BB BF",
+  byte[] UTF16LE = "EE EF",
+  byte[] UTF16BE = "EF EE"
+};
+
+optional BOM bom;
+
+if bom = BOM.UTF8 {
+  byte[] content encoding UTF8;
+}
+
+if bom = BOM.UTF16LE {
+  byte[] content encoding UTF16LE;
+}
+
+if bom = BOM.UTF16BE {
+  byte[] content encoding UTF16BE;
+}
+
