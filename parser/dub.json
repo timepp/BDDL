@@ -1,0 +1,8 @@
+{
+	"name": "parser",
+	"description": "A minimal D application.",
+	"copyright": "Copyright © 2016, idtong",
+	"authors": ["idtong"],
+	"dependencies": {
+	}
+}
