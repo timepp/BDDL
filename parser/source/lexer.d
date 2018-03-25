@@ -1,11 +1,13 @@
 module bddl.lexer;
 
+import std.array;
 import std.variant;
 import core.stdc.ctype;
+import std.algorithm;
 
 enum TokenType
 {
-    Symbol, Number, String, CompareOperator, Other
+    Symbol, Number, String, Operator, Other
 }
 
 struct Token
@@ -57,7 +59,7 @@ Token[] tokenize(string str)
                 i++;
                 state = ParseState.InNumber;
             }
-            else if (str[i] == '/' && i+1 < str.length && str[i+1] == '/')
+            else if (i+1 < str.length && str[i..i+2] == "//")
             {
                 state = ParseState.InComment;
                 i += 2;
@@ -72,12 +74,15 @@ Token[] tokenize(string str)
                 i++;
                 state = ParseState.InSymbol;
             }
-            else if (str[i] == '>' || str[i] == '<' || str[i] == '=')
+            else if (i+1 < str.length && ![">=", "<=", "==", "<>"].find(str[i..i+1]).empty)
             {
-                size_t j = i+1;
-                if (j < str.length && (str[j] == '>' || str[j] == '<' || str[j] == '=')) j++;
-                result ~= Token(TokenType.CompareOperator, str[i..j]);
-                i = j;
+                result ~= Token(TokenType.Operator, str[i..i+2]);
+                i += 2;
+            }
+            else if (!"+-*/><".find(str[i]).empty)
+            {
+                result ~= Token(TokenType.Operator, str[i..i+1]);
+                i++;
             }
             else
             {
@@ -154,5 +159,10 @@ unittest
     {
         auto result = tokenize(c.input);
         assert(result == c.expected);
+    }
+
+    foreach (c; cases)
+    {
+        
     }
 }
